@@ -1,0 +1,248 @@
+/* BASE */
+
+body{
+font-family:"Inter","Segoe UI",sans-serif;
+background:#0f172a;
+color:#e2e8f0;
+margin:0;
+}
+
+
+/* HEADER */
+/* HEADER */
+
+.dashboard-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:18px 40px;
+
+background:#020617;
+
+border-bottom:1px solid #1e293b;
+
+position:sticky;
+top:0;
+z-index:100;
+}
+
+
+/* Logo */
+
+.logo{
+font-size:20px;
+font-weight:600;
+letter-spacing:0.5px;
+color:#f1f5f9;
+}
+
+
+/* Right side */
+
+.nav-actions{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+
+/* Admin tag */
+
+.admin-tag{
+background:#1e293b;
+padding:5px 12px;
+border-radius:20px;
+font-size:12px;
+color:#93c5fd;
+}
+
+.nav-actions button{
+
+padding:7px 16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
+font-weight:500;
+transition:.25s;
+
+}
+
+/* Approved button */
+
+.nav-actions button:first-child{
+
+background:#3b82f6;
+color:white;
+
+}
+
+.nav-actions button:first-child:hover{
+
+background:#2563eb;
+
+}
+
+/* Logout button */
+
+.nav-actions button:last-child{
+
+background:#ef4444;
+color:white;
+
+}
+
+.nav-actions button:last-child:hover{
+
+background:#dc2626;
+
+}
+
+/* Logout button */
+
+.nav-actions button{
+
+background:#ef4444;
+border:none;
+color:white;
+
+padding:7px 16px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:13px;
+
+transition:.25s;
+
+}
+
+.nav-actions button:hover{
+background:#dc2626;
+}
+
+/* MAIN */
+
+main{
+max-width:1050px;
+margin:40px auto;
+padding:0 20px;
+}
+
+#adminEventsContainer{
+display:grid;
+gap:24px;
+}
+
+
+/* EVENT CARD */
+
+.eventCard{
+background:#020617;
+border:1px solid #1e293b;
+border-radius:14px;
+padding:26px;
+transition:.3s;
+position:relative;
+}
+
+.eventCard:hover{
+transform:translateY(-5px);
+box-shadow:0 14px 30px rgba(0,0,0,0.4);
+border-color:#3b82f6;
+}
+
+
+/* TITLE */
+
+.eventCard h3{
+margin-top:0;
+margin-bottom:15px;
+font-size:18px;
+color:white;
+}
+
+
+/* INFO GRID */
+
+.event-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+font-size:14px;
+color:#cbd5f5;
+}
+
+
+/* STATUS BADGE */
+
+.status{
+display:inline-block;
+margin-top:10px;
+padding:4px 10px;
+border-radius:20px;
+font-size:12px;
+font-weight:500;
+background:#1e293b;
+color:#93c5fd;
+}
+
+
+/* BUTTON GROUP */
+
+.btn-group{
+margin-top:18px;
+display:flex;
+gap:10px;
+}
+
+
+/* BUTTON STYLE */
+
+.btn-group button{
+padding:7px 16px;
+border:none;
+border-radius:6px;
+font-size:13px;
+cursor:pointer;
+font-weight:500;
+transition:.25s;
+}
+
+
+/* APPROVE */
+
+.approveBtn{
+background:#22c55e;
+color:white;
+}
+
+.approveBtn:hover{
+background:#16a34a;
+}
+
+
+/* REJECT */
+
+.rejectBtn{
+background:#f59e0b;
+color:white;
+}
+
+.rejectBtn:hover{
+background:#d97706;
+}
+
+
+/* DELETE */
+
+.deleteBtn{
+background:#ef4444;
+color:white;
+}
+
+.deleteBtn:hover{
+background:#dc2626;
+}

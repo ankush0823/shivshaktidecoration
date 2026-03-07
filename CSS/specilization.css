@@ -1,0 +1,98 @@
+
+/* =========================
+   SPECIALIZATION SECTION
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #141414);
+    color: #000000;
+}
+.specialization{
+    padding: 80px 10%;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.section-title{
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle{
+    color: #666;
+    margin-bottom: 50px;
+}
+
+/* cards grid */
+
+.cards-container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 30px;
+}
+
+/* card */
+
+.special-card{
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+/* image */
+
+.special-card img{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: 0.4s;
+}
+
+/* content */
+
+.special-card h3{
+    margin: 15px 0 10px;
+    font-size: 22px;
+}
+
+.special-card p{
+    padding: 0 15px 20px;
+    color: #555;
+}
+
+/* hover effect */
+
+.special-card:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.special-card:hover img{
+    transform: scale(1.08);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px){
+
+.cards-container{
+    grid-template-columns: repeat(2,1fr);
+}
+
+}
+
+@media (max-width: 600px){
+
+.cards-container{
+    grid-template-columns: 1fr;
+}
+
+.section-title{
+    font-size: 28px;
+}
+
+}

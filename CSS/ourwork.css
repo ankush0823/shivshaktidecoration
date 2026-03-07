@@ -1,0 +1,213 @@
+ 
+/* =========================
+   OUR WORK SECTION
+========================= */
+
+.our-work{
+    padding: 80px 10%;
+    background: #fff;
+    text-align: center;
+}
+
+/* grid layout */
+
+.work-container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* card */
+
+.work-card{
+    overflow: hidden;
+    border-radius: 10px;
+    position: relative;
+}
+
+/* image */
+
+.work-card img{
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: 0.4s ease;
+}
+
+/* hover effect */
+
+.work-card:hover img{
+    transform: scale(1.1);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px){
+
+.work-container{
+    grid-template-columns: repeat(2,1fr);
+}
+
+}
+
+@media (max-width: 600px){
+
+.work-container{
+    grid-template-columns: 1fr;
+}
+
+} 
+
+ 
+/* =========================
+   WHY CHOOSE US
+========================= */
+
+.why-choose-us{
+    padding: 80px 10%;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+/* grid */
+
+.choose-container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* card */
+
+.choose-card{
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.choose-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* icon */
+
+.choose-icon{
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.choose-card h3{
+    margin-bottom: 10px;
+}
+
+.choose-card p{
+    color: #555;
+    font-size: 14px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px){
+
+.choose-container{
+    grid-template-columns: repeat(2,1fr);
+}
+
+}
+
+@media (max-width: 600px){
+
+.choose-container{
+    grid-template-columns: 1fr;
+}
+
+}  
+/* =========================
+   TESTIMONIALS SECTION
+========================= */
+
+.testimonials{
+    padding: 80px 10%;
+    background: #fff;
+    text-align: center;
+}
+
+/* grid */
+
+.testimonial-container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* card */
+
+.testimonial-card{
+    background: #f9f9f9;
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.testimonial-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* client image */
+
+.testimonial-card img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* text */
+
+.testimonial-text{
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.testimonial-card h4{
+    margin-bottom: 5px;
+}
+
+.stars{
+    color: #f5b50a;
+    font-size: 18px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 992px){
+
+.testimonial-container{
+    grid-template-columns: repeat(2,1fr);
+}
+
+}
+
+@media (max-width: 600px){
+
+.testimonial-container{
+    grid-template-columns: 1fr;
+}
+
+} 

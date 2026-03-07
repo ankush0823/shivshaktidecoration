@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <header class="dashboard-header">
+      <div class="logo">Admin Dashboard</div>
+
+      <div class="nav-actions">
+        <button onclick="goToApproved()">Approved Events</button>
+
+        <button onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="adminEventsContainer">
+        <!-- Events will be dynamically added here by JS -->
+      </div>
+    </main>
+
+    <script src="JS/dashboard.js"></script>
+    <script>
+      function logout() {
+        window.location.href = "index.html";
+      }
+    </script>
+    <script src="JS/dashboard.js"></script>
+  </body>
+</html>
