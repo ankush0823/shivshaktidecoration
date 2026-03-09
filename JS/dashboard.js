@@ -1,219 +1,285 @@
 // ============================
-// dashboard.js
+// FRONT_END/JS/dashboard.js
 // ============================
 
-// --- Sidebar navigation ---
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+
+// --- Sidebar Navigation ---
 const sidebarItems = document.querySelectorAll(".sidebar-nav li");
 const sections = document.querySelectorAll(".section");
 
-sidebarItems.forEach((item) => {
+sidebarItems.forEach(item => {
   item.addEventListener("click", () => {
-    // Remove active from all
-    sidebarItems.forEach((i) => i.classList.remove("active"));
-    // Add active to clicked
+    sidebarItems.forEach(i => i.classList.remove("active"));
     item.classList.add("active");
-
-    // Show related section
     const sectionId = item.getAttribute("data-section");
-    sections.forEach((sec) => {
-      if (sec.id === sectionId) sec.style.display = "block";
-      else sec.style.display = "none";
-    });
+    sections.forEach(sec => sec.style.display = sec.id === sectionId ? "block" : "none");
   });
 });
 
-// --- Modal for Add/Edit Cards ---
+// --- Modal ---
 const modal = document.getElementById("card-modal");
 const closeBtn = document.querySelector(".close-btn");
 const cardForm = document.getElementById("card-form");
 const modalTitle = document.getElementById("modal-title");
 const modalSubmitBtn = document.getElementById("modal-submit-btn");
 
-// current target section (specialization or gallery)
 let currentSection = "";
-let editingCard = null;
 
-// --- Open Modal ---
-document.querySelectorAll(".add-card-btn").forEach((btn) => {
+// Open modal
+document.querySelectorAll(".add-card-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    currentSection = btn.closest(".section").id; // 'specialization' or 'gallery'
+    currentSection = btn.closest(".section").id; // "specialization" ya "gallery"
     modalTitle.textContent = "Add New Card";
     modalSubmitBtn.textContent = "Add Card";
-    editingCard = null;
     cardForm.reset();
+
+    const titleLabel = document.querySelector('label[for="card-title"]');
+    const descLabel = document.querySelector('label[for="card-desc"]');
+    const titleInput = document.getElementById("card-title");
+    const descInput = document.getElementById("card-desc");
+
+    // Specialization mein title/desc dikhao, gallery mein nahi
+    const showTitleDesc = currentSection === "specialization";
+    titleLabel.style.display = showTitleDesc ? "block" : "none";
+    descLabel.style.display = showTitleDesc ? "block" : "none";
+    titleInput.style.display = showTitleDesc ? "block" : "none";
+    descInput.style.display = showTitleDesc ? "block" : "none";
+    titleInput.required = showTitleDesc;
+    descInput.required = showTitleDesc;
+
     modal.style.display = "block";
   });
 });
 
-// --- Close Modal ---
-closeBtn.addEventListener("click", () => (modal.style.display = "none"));
-window.addEventListener("click", (e) => {
-  if (e.target === modal) modal.style.display = "none";
+closeBtn.addEventListener("click", () => { modal.style.display = "none"; cardForm.reset(); });
+window.addEventListener("click", e => {
+  if (e.target === modal) { modal.style.display = "none"; cardForm.reset(); }
 });
 
-// --- Add / Edit Card Submit ---
-cardForm.addEventListener("submit", (e) => {
+// --- Load Cards ---
+// FIX: "gallery" section ka data server pe "/api/work" endpoint se aata hai
+async function loadCards(section) {
+  const endpoint = section === "specialization" ? "/api/specialization" : "/api/work";
+  const containerId = section === "specialization" ? "specialization-cards" : "gallery-cards";
+
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) { console.error("Failed to load:", endpoint); return; }
+
+    const data = await res.json();
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    data.forEach(card => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+
+      cardDiv.innerHTML = `
+        <img src="${card.imageUrl}" alt="${card.title || 'Gallery Image'}" />
+        ${card.title ? `<h3>${card.title}</h3>` : ""}
+        ${card.description ? `<p>${card.description}</p>` : ""}
+        <div class="card-actions">
+          <button class="delete-btn">Delete</button>
+        </div>
+      `;
+
+      cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (confirm("Are you sure you want to delete this card?")) {
+          const deleteEndpoint = section === "specialization"
+            ? `/api/specialization/${card._id}`
+            : `/api/work/${card._id}`;
+          try {
+            await fetch(deleteEndpoint, { method: "DELETE" });
+            cardDiv.remove();
+            updateSummaryCounts();
+          } catch (err) {
+            alert("Delete failed: " + err.message);
+          }
+        }
+      });
+
+      container.appendChild(cardDiv);
+    });
+
+    updateSummaryCounts();
+  } catch (err) {
+    console.error("Error loading cards:", err);
+  }
+}
+
+// --- Add Card ---
+cardForm.addEventListener("submit", async e => {
   e.preventDefault();
 
   const imageInput = document.getElementById("card-image");
   const title = document.getElementById("card-title").value;
   const desc = document.getElementById("card-desc").value;
 
-  // Create card element
-  const cardDiv = document.createElement("div");
-  cardDiv.classList.add("card");
-
-  // Image preview
-  const imgURL = URL.createObjectURL(imageInput.files[0]);
-  cardDiv.innerHTML = `
-    <img src="${imgURL}" alt="${title}" />
-    <h3>${title}</h3>
-    <p>${desc}</p>
-    <div class="card-actions">
-      <button class="edit-btn">Edit</button>
-      <button class="delete-btn">Delete</button>
-    </div>
-  `;
-
-  const container =
-    currentSection === "specialization"
-      ? document.getElementById("specialization-cards")
-      : document.getElementById("gallery-cards");
-
-  if (editingCard) {
-    container.replaceChild(cardDiv, editingCard);
-    editingCard = null;
-  } else {
-    container.appendChild(cardDiv);
+  if (!imageInput.files[0]) { alert("Please select an image!"); return; }
+  if (currentSection === "specialization" && (!title || !desc)) {
+    alert("Title and description required!");
+    return;
   }
 
-  updateSummaryCounts();
-  modal.style.display = "none";
+  const formData = new FormData();
+  formData.append("image", imageInput.files[0]);
+  if (currentSection === "specialization") {
+    formData.append("title", title);
+    formData.append("description", desc);
+  }
 
-  // --- Add Edit/Delete button functionality
-  const editBtn = cardDiv.querySelector(".edit-btn");
-  const deleteBtn = cardDiv.querySelector(".delete-btn");
+  // FIX: "gallery" section ka endpoint "/api/work" hai
+  const endpoint = currentSection === "specialization" ? "/api/specialization" : "/api/work";
 
-  editBtn.addEventListener("click", () => {
-    modal.style.display = "block";
-    modalTitle.textContent = "Edit Card";
-    modalSubmitBtn.textContent = "Save Changes";
-    document.getElementById("card-title").value = title;
-    document.getElementById("card-desc").value = desc;
-    editingCard = cardDiv;
-    currentSection = cardDiv.closest(".section").id;
-  });
+  modalSubmitBtn.disabled = true;
+  modalSubmitBtn.textContent = "Saving...";
 
-  deleteBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete this card?")) {
-      cardDiv.remove();
-      updateSummaryCounts();
-    }
-  });
+  try {
+    const res = await fetch(endpoint, { method: "POST", body: formData });
+    const data = await res.json();
+
+    if (!res.ok) { alert("Error: " + (data.error || "Failed to save")); return; }
+
+    alert("Card saved successfully!");
+    modal.style.display = "none";
+    cardForm.reset();
+
+    // FIX: "gallery" section ke liye "gallery" pass karo (jo internally /api/work hit karega)
+    loadCards(currentSection);
+  } catch (err) {
+    alert("Error: " + err.message);
+  } finally {
+    modalSubmitBtn.disabled = false;
+    modalSubmitBtn.textContent = "Add Card";
+  }
 });
 
 // --- Update Summary Counts ---
 function updateSummaryCounts() {
-  document
-    .getElementById("total-specialization")
-    .querySelector("p").textContent = document.getElementById(
-    "specialization-cards",
-  ).children.length;
-
+  document.getElementById("total-specialization").querySelector("p").textContent =
+    document.getElementById("specialization-cards").children.length;
   document.getElementById("total-gallery").querySelector("p").textContent =
     document.getElementById("gallery-cards").children.length;
-
-  // Bookings & Enquiries counts (frontend simulation)
   document.getElementById("total-bookings").querySelector("p").textContent =
     document.getElementById("bookings-cards").children.length;
-
   document.getElementById("total-enquiries").querySelector("p").textContent =
     document.getElementById("enquiries-cards").children.length;
 }
 
-// ============================
-// Simulated Bookings / Enquiries (frontend)
-// ============================
+// --- Load Enquiries ---
+async function loadEnquiries() {
+  try {
+    const res = await fetch("/enquiries");
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = document.getElementById("enquiries-cards");
+    container.innerHTML = "";
 
-function addBooking(data) {
-  const container = document.getElementById("bookings-cards");
-  const cardDiv = document.createElement("div");
-  cardDiv.classList.add("card");
-  cardDiv.innerHTML = `
-    <h3>${data.name}</h3>
-    <p><strong>Phone:</strong> ${data.phone}</p>
-    <p><strong>Email:</strong> ${data.email}</p>
-    <p><strong>Date:</strong> ${data.date}</p>
-    <p><strong>Event:</strong> ${data.eventType}</p>
-    <p><strong>Location:</strong> ${data.location}</p>
-    <p><strong>Details:</strong> ${data.details}</p>
-    <p><strong>Status:</strong> Pending</p>
-    <div class="card-actions">
-      <button class="approve-btn">Approve</button>
-      <button class="delete-btn">Delete</button>
-    </div>
-  `;
-  container.appendChild(cardDiv);
-  updateSummaryCounts();
-
-  const approveBtn = cardDiv.querySelector(".approve-btn");
-  const deleteBtn = cardDiv.querySelector(".delete-btn");
-
-  approveBtn.addEventListener("click", () => {
-    cardDiv.querySelector("p:nth-child(7)").textContent = "Status: Approved";
-  });
-
-  deleteBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete this booking?")) {
-      cardDiv.remove();
-      updateSummaryCounts();
-    }
-  });
+    data.forEach(item => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+      cardDiv.innerHTML = `
+        <h3>${item.name}</h3>
+        <p><strong>Email:</strong> ${item.email}</p>
+        <p><strong>Mobile:</strong> ${item.mobile || '-'}</p>
+        <p><strong>Message:</strong> ${item.message}</p>
+        <p><small>${new Date(item.createdAt).toLocaleDateString('en-IN')}</small></p>
+        <div class="card-actions">
+          <button class="delete-btn">Delete</button>
+        </div>
+      `;
+      cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (confirm("Delete this enquiry?")) {
+          try {
+            await fetch(`/enquiries/${item._id}`, { method: "DELETE" });
+            cardDiv.remove();
+            updateSummaryCounts();
+          } catch (err) {
+            alert("Delete failed");
+          }
+        }
+      });
+      container.appendChild(cardDiv);
+    });
+    updateSummaryCounts();
+  } catch (err) {
+    console.error("Error loading enquiries:", err);
+  }
 }
 
-function addEnquiry(data) {
-  const container = document.getElementById("enquiries-cards");
-  const cardDiv = document.createElement("div");
-  cardDiv.classList.add("card");
-  cardDiv.innerHTML = `
-    <h3>${data.name}</h3>
-    <p><strong>Email:</strong> ${data.email}</p>
-    <p><strong>Message:</strong> ${data.message}</p>
-    <div class="card-actions">
-      <button class="delete-btn">Delete</button>
-    </div>
-  `;
-  container.appendChild(cardDiv);
-  updateSummaryCounts();
+// --- Load Bookings ---
+async function loadBookings() {
+  try {
+    const res = await fetch("/bookings");
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = document.getElementById("bookings-cards");
+    container.innerHTML = "";
 
-  const deleteBtn = cardDiv.querySelector(".delete-btn");
-  deleteBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete this enquiry?")) {
-      cardDiv.remove();
-      updateSummaryCounts();
-    }
-  });
+    data.forEach(item => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+      cardDiv.innerHTML = `
+        <h3>${item.name} (${item.eventType})</h3>
+        <p><strong>Phone:</strong> ${item.phone}</p>
+        <p><strong>Email:</strong> ${item.email || '-'}</p>
+        <p><strong>Date:</strong> ${item.date}</p>
+        <p><strong>Location:</strong> ${item.location}</p>
+        <p><strong>Details:</strong> ${item.details || '-'}</p>
+        <p class="status-text"><strong>Status:</strong> ${item.status || 'Pending'}</p>
+        <div class="card-actions">
+          <button class="approve-btn" ${item.status === 'Approved' ? 'disabled' : ''}>Approve</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+      `;
+
+      cardDiv.querySelector(".approve-btn").addEventListener("click", async () => {
+        try {
+          await fetch(`/bookings/${item._id}/status`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "Approved" })
+          });
+          cardDiv.querySelector(".status-text").innerHTML = "<strong>Status:</strong> Approved ✅";
+          cardDiv.querySelector(".approve-btn").disabled = true;
+        } catch (err) {
+          alert("Approve failed");
+        }
+      });
+
+      cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (confirm("Delete this booking?")) {
+          try {
+            await fetch(`/bookings/${item._id}`, { method: "DELETE" });
+            cardDiv.remove();
+            updateSummaryCounts();
+          } catch (err) {
+            alert("Delete failed");
+          }
+        }
+      });
+
+      container.appendChild(cardDiv);
+    });
+    updateSummaryCounts();
+  } catch (err) {
+    console.error("Error loading bookings:", err);
+  }
 }
 
-if (localStorage.getItem("adminLoggedIn") !== "true") {
-  window.location.href = "login.html";
-}
+// --- DOM Loaded ---
+document.addEventListener("DOMContentLoaded", () => {
+  loadCards("specialization");
+  loadCards("gallery"); // gallery section = /api/work endpoint
+  loadEnquiries();
+  loadBookings();
+});
 
+// --- Logout ---
 function logout() {
   localStorage.removeItem("adminLoggedIn");
-
   window.location.href = "login.html";
 }
-
-
-
-
-
-
-app.get("/enquiries", (req, res) => {
-  res.json(enquiries);
-});
-
-app.get("/bookings", (req, res) => {
-  res.json(bookings);
-});

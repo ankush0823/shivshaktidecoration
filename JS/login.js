@@ -1,15 +1,46 @@
-function login() {
-  const username = document.getElementById("username").value;
+// ============================
+// FRONT_END/JS/login.js
+// ============================
+
+async function login() {
+  const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
 
-  const adminUser = "admin";
-  const adminPass = "12345";
+  if (!username || !password) {
+    alert("Please enter username and password");
+    return;
+  }
 
-  if (username === adminUser && password === adminPass) {
-    localStorage.setItem("adminLoggedIn", "true");
+  const btn = document.querySelector("button");
+  btn.disabled = true;
+  btn.textContent = "Logging in...";
 
-    window.location.href = "dashboard.html";
-  } else {
-    alert("Wrong username or password");
+  try {
+    const res = await fetch("/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      localStorage.setItem("adminLoggedIn", "true");
+      window.location.href = "dashboard.html";
+    } else {
+      alert(result.message || "Wrong username or password");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error! Make sure server is running.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Login";
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") login();
+  });
+});

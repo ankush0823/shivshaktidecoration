@@ -3,39 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Shiv Shakti Decoration</title>
 
+    <!-- CSS Files -->
     <link rel="stylesheet" href="CSS/navbar.css" />
     <link rel="stylesheet" href="CSS/hero.css" />
     <link rel="stylesheet" href="CSS/specilization.css" />
     <link rel="stylesheet" href="CSS/ourwork.css" />
     <link rel="stylesheet" href="CSS/contact.css" />
+
     <style>
-      html {
-        scroll-behavior: smooth;
-      }
+      html { scroll-behavior: smooth; }
     </style>
   </head>
 
   <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
       <div class="logo">SHIV SHAKTI</div>
-
       <ul class="nav-links">
         <li><a href="#home">Home</a></li>
         <li><a href="#specilization">Specialization</a></li>
         <li><a href="#ourwork">Our Work</a></li>
         <li><a href="#contact-us">Contact</a></li>
       </ul>
-
-      <button class="book-btn desktop-book"><a href="create-event.html">Book Now</a></button>
-
-      <div class="menu-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+      <button class="book-btn desktop-book">
+        <a href="create-event.html">Book Now</a>
+      </button>
+      <div class="menu-toggle"><span></span><span></span><span></span></div>
     </nav>
 
     <!-- HERO SECTION -->
@@ -43,245 +38,68 @@
       <div class="hero-overlay">
         <div class="hero-content">
           <h1>Make Your Events Beautiful & Memorable</h1>
-
-          <p>
-            We provide professional decoration services for weddings, birthdays,
-            anniversaries and special events.
-          </p>
-
+          <p>We provide professional decoration services for weddings, birthdays, anniversaries and special events.</p>
           <div class="hero-buttons">
-            <a href="create-event.html" class="btn">Book Now</a> 
+            <a href="create-event.html" class="btn">Book Now</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Specilization section  -->
+    <!-- SPECIALIZATION SECTION -->
     <section class="specialization" id="specilization">
       <div class="container">
         <h2 class="section-title">Our Specialization</h2>
-        <p class="section-subtitle">
-          We create beautiful decorations for every special occasion
-        </p>
+        <p class="section-subtitle">We create beautiful decorations for every special occasion</p>
 
-        <!-- cards container -->
-        <div class="cards-container" id="cardsContainer">
-          <!-- example card -->
-          <div class="special-card">
-            <img src="IMAGES/wed-decoration.jpg" alt="" />
-            <h3>Wedding Decoration</h3>
-            <p>Beautiful wedding stage and venue decoration.</p>
-          </div>
-
-          <div class="special-card">
-            <img src="IMAGES/birthday-decoration.jpg" alt="" />
-            <h3>Birthday Decoration</h3>
-            <p>Creative balloon decoration for birthdays.</p>
-          </div>
-
-          <div class="special-card">
-            <img src="IMAGES/mandap.webp" alt="" />
-            <h3>Mandap Decoration</h3>
-            <p>Traditional mandap decoration for weddings.</p>
-          </div>
-
-          <div class="special-card">
-            <img src="IMAGES/car-deco.jpg" alt="" />
-            <h3>Car Decoration</h3>
-            <p>Beautiful decoration of car using flowers</p>
-          </div>
+        <div class="cards-container" id="specialization-container">
+          <!-- Backend loaded specialization cards will appear here -->
         </div>
       </div>
     </section>
 
     <!-- OUR WORK SECTION -->
-
     <section class="our-work" id="ourwork">
       <div class="container">
         <h2 class="section-title">Our Work</h2>
-        <p class="section-subtitle">
-          Take a look at some of our beautiful event decorations
-        </p>
+        <p class="section-subtitle">Take a look at some of our beautiful event decorations</p>
 
-        <!-- gallery container -->
-        <div class="work-container" id="workContainer">
-          <!-- work item -->
-          <div class="work-card">
-            <img src="images/work1.jpg" alt="Wedding Decoration" />
-          </div>
-
-          <div class="work-card">
-            <img src="images/work2.jpg" alt="Birthday Decoration" />
-          </div>
-
-          <div class="work-card">
-            <img src="images/work3.jpg" alt="Mandap Decoration" />
-          </div>
-
-          <div class="work-card">
-            <img src="images/work4.jpg" alt="Party Decoration" />
-          </div>
-
-          <div class="work-card">
-            <img src="images/work5.jpg" alt="Event Decoration" />
-          </div>
-
-          <div class="work-card">
-            <img src="images/work6.jpg" alt="Stage Decoration" />
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- WHY CHOOSE US SECTION -->
-
-    <section class="why-choose-us">
-      <div class="container">
-        <h2 class="section-title">Why Choose Us</h2>
-        <p class="section-subtitle">
-          We make every event beautiful, memorable and stress-free.
-        </p>
-
-        <div class="choose-container">
-          <div class="choose-card">
-            <div class="choose-icon">🎨</div>
-            <h3>Creative Designs</h3>
-            <p>Unique and modern decoration ideas for every event.</p>
-          </div>
-
-          <div class="choose-card">
-            <div class="choose-icon">⏰</div>
-            <h3>On-Time Setup</h3>
-            <p>We ensure decoration is completed before your event starts.</p>
-          </div>
-
-          <div class="choose-card">
-            <div class="choose-icon">💰</div>
-            <h3>Affordable Pricing</h3>
-            <p>Best decoration services at reasonable prices.</p>
-          </div>
-
-          <div class="choose-card">
-            <div class="choose-icon">⭐</div>
-            <h3>Customer Satisfaction</h3>
-            <p>We focus on making your event memorable and beautiful.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TESTIMONIALS SECTION -->
-
-    <section class="testimonials">
-      <div class="container">
-        <h2 class="section-title">What Our Clients Say</h2>
-        <p class="section-subtitle">
-          Hear from our happy customers who trusted us for their special events.
-        </p>
-
-        <div class="testimonial-container">
-          <!-- testimonial 1 -->
-          <div class="testimonial-card">
-            <img src="images/client1.jpg" alt="Client" />
-            <p class="testimonial-text">
-              The decoration was absolutely beautiful. Our wedding looked
-              magical.
-            </p>
-            <h4>Rahul Sharma</h4>
-            <div class="stars">⭐⭐⭐⭐⭐</div>
-          </div>
-
-          <!-- testimonial 2 -->
-          <div class="testimonial-card">
-            <img src="images/client2.jpg" alt="Client" />
-            <p class="testimonial-text">
-              Amazing birthday decoration. Everyone loved the theme and
-              balloons.
-            </p>
-            <h4>Pooja Verma</h4>
-            <div class="stars">⭐⭐⭐⭐⭐</div>
-          </div>
-
-          <!-- testimonial 3 -->
-          <div class="testimonial-card">
-            <img src="images/client3.jpg" alt="Client" />
-            <p class="testimonial-text">
-              Very professional team and on-time setup. Highly recommended.
-            </p>
-            <h4>Amit Singh</h4>
-            <div class="stars">⭐⭐⭐⭐⭐</div>
-          </div>
+        <div class="work-container" id="work-container">
+          <!-- Backend loaded work cards will appear here -->
         </div>
       </div>
     </section>
 
     <!-- CONTACT SECTION -->
-
     <section class="contact" id="contact-us">
       <div class="container">
         <h2 class="section-title">Contact Us</h2>
-        <p class="section-subtitle">
-          Get in touch with us to make your event beautiful.
-        </p>
+        <p class="section-subtitle">Get in touch with us to make your event beautiful.</p>
 
         <div class="contact-container">
-          <!-- contact info -->
-
-          <div class="contact-info">
-            <div class="info-box">
-              <h3>📞 Phone</h3>
-              <p>+91-9876543210</p>
-            </div>
-
-            <div class="info-box">
-              <h3>📧 Email</h3>
-              <p>contact@shivshaktidecoration.com</p>
-            </div>
-
-            <div class="info-box">
-              <h3>📍 Location</h3>
-              <p>Gurugram, Haryana</p>
-            </div>
-          </div>
-
           <!-- contact form -->
-
           <div class="contact-form">
             <form id="enquiryForm">
-
               <input type="text" id="name" placeholder="Your Name" required />
-
               <input type="email" id="email" placeholder="Your Email" required />
-
               <input type="tel" id="mobile" placeholder="Mobile Number" required />
-
-              <textarea id="message" placeholder="Your Message" rows="5"></textarea>
-
+              <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
               <button type="submit" class="btn">Send Message</button>
-
             </form>
           </div>
         </div>
       </div>
-    </section> 
-    <!-- FOOTER -->
+    </section>
 
+    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-container">
-        <!-- about -->
-
         <div class="footer-col">
           <h3>Event Decor</h3>
-          <p>
-            We provide beautiful and creative decoration services for weddings,
-            birthdays and special events.
-          </p>
+          <p>We provide beautiful and creative decoration services for weddings, birthdays and special events.</p>
         </div>
-
-        <!-- quick links -->
-
         <div class="footer-col">
           <h3>Quick Links</h3>
-
           <ul>
             <li><a href="#home">Home</a></li>
             <li><a href="#specilization">Services</a></li>
@@ -289,37 +107,17 @@
             <li><a href="#contact-us">Contact</a></li>
           </ul>
         </div>
-
-        <!-- contact -->
-
         <div class="footer-col">
           <h3>Contact</h3>
-
           <p>📞 +91-9876543210</p>
           <p>contact@shivshaktidecoration.com</p>
           <p>📍Gurugram, Haryana</p>
         </div>
-
-        <!-- social -->
-
-        <div class="footer-col">
-          <h3>Follow Us</h3>
-
-          <div class="social-links">
-            <a href="#">Facebook</a>
-            <a href="#">Instagram</a>
-            <a href="#">WhatsApp</a>
-          </div>
-        </div>
       </div>
-
-      <!-- copyright -->
-
       <div class="footer-bottom">
         <p>© 2025 Shiv Shakti Decoration. All rights reserved.</p>
       </div>
     </footer>
-   
 
     <script src="JS/index.js"></script>
   </body>
