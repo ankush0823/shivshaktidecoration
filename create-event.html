@@ -1,53 +1,48 @@
- 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Booking</title>
+    <link rel="stylesheet" href="CSS/create-event.css" />
+  </head>
 
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Booking</title>
-<link rel="stylesheet" href="CSS/create-event.css">
-</head>
-
-<body>
-
-<section class="booking">
-
-    <div class="booking-container">
-
+  <body>
+    <section class="booking">
+      <div class="booking-container">
         <h2>Book Your Event</h2>
         <p>Fill the form below to book your decoration service</p>
 
-        <form>
+        <form action="http://localhost:3000/book-event" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required />
 
-            <input type="text" placeholder="Your Name" required>
+          <input type="tel" name="phone" placeholder="Mobile Number" required />
 
-            <input type="tel" placeholder="Mobile Number" required>
+          <input type="email" name="email" placeholder="Email Address" />
 
-            <input type="email" placeholder="Email Address">
+          <input type="date" name="date" required />
 
-            <input type="date" required>
+          <select name="eventType" required>
+            <option value="">Select Event Type</option>
+            <option>Wedding</option>
+            <option>Birthday</option>
+            <option>Anniversary</option>
+            <option>Baby Shower</option>
+            <option>Party</option>
+          </select>
 
-            <select required>
-                <option value="">Select Event Type</option>
-                <option>Wedding</option>
-                <option>Birthday</option>
-                <option>Anniversary</option>
-                <option>Baby Shower</option>
-                <option>Party</option>
-            </select>
+          <input
+            type="text"
+            name="location"
+            placeholder="Event Location"
+            required
+          />
 
-            <input type="text" placeholder="Event Location" required>
+          <textarea name="details" placeholder="Additional Details"></textarea>
 
-            <textarea placeholder="Additional Details"></textarea>
-
-            <button type="submit">Submit Booking</button>
-
+          <button type="submit">Submit Booking</button>
         </form>
-
-    </div>
-
-</section>
-
-</body>
-</html> 
+      </div>
+    </section>
+  </body>
+</html>
