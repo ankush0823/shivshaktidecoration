@@ -1,28 +1,33 @@
-const form = document.getElementById("eventForm");
+document.addEventListener("DOMContentLoaded", () => {
+  const bookingForm = document.getElementById("bookingForm");
 
-form.addEventListener("submit", function(e){
+  bookingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-e.preventDefault();
+    const data = {
+      name: bookingForm.name.value,
+      phone: bookingForm.phone.value,
+      email: bookingForm.email.value,
+      date: bookingForm.date.value,
+      eventType: bookingForm.eventType.value,
+      location: bookingForm.location.value,
+      details: bookingForm.details.value
+    };
 
-const event = {
-id: Date.now(),
-customerName: document.getElementById("customerName").value,
-customerContact: document.getElementById("customerContact").value,
-name: document.getElementById("eventName").value,
-date: document.getElementById("eventDate").value,
-location: document.getElementById("eventLocation").value,
-description: document.getElementById("eventDescription").value,
-status:"pending"
-};
+    try {
+      const res = await fetch("http://localhost:3000/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
 
-let events = JSON.parse(localStorage.getItem("events")) || [];
+      const result = await res.json();
+      alert(result.message);  // "Booking submitted successfully"
 
-events.push(event);
-
-localStorage.setItem("events", JSON.stringify(events));
-
-alert("Event Created Successfully!");
-
-form.reset();
-
+      bookingForm.reset();    // Form clear after submission
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong!");
+    }
+  });
 });

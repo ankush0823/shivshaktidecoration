@@ -204,3 +204,16 @@ function logout() {
 
   window.location.href = "login.html";
 }
+
+
+
+
+
+
+app.get("/enquiries", (req, res) => {
+  res.json(enquiries);
+});
+
+app.get("/bookings", (req, res) => {
+  res.json(bookings);
+});

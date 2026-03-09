@@ -13,7 +13,7 @@
         <h2>Book Your Event</h2>
         <p>Fill the form below to book your decoration service</p>
 
-        <form action="http://localhost:3000/book-event" method="POST">
+        <form id="bookingForm" >
           <input type="text" name="name" placeholder="Your Name" required />
 
           <input type="tel" name="phone" placeholder="Mobile Number" required />
@@ -31,12 +31,7 @@
             <option>Party</option>
           </select>
 
-          <input
-            type="text"
-            name="location"
-            placeholder="Event Location"
-            required
-          />
+          <input type="text" name="location" placeholder="Event Location" required />
 
           <textarea name="details" placeholder="Additional Details"></textarea>
 
@@ -44,5 +39,6 @@
         </form>
       </div>
     </section>
+    <script src="JS/create-event.js"></script>
   </body>
 </html>
