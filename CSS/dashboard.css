@@ -322,3 +322,136 @@ body {
 #modal-submit-btn:hover {
   background: #4338ca;
 }
+
+
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================ */
+
+/* ----------- Large Monitors (1400px+) ----------- */
+
+@media (min-width:1400px){
+
+  .cards-section{
+    justify-content:flex-start;
+  }
+
+  .card{
+    width:22%;
+  }
+
+}
+
+/* ----------- Laptops (1024px - 1399px) ----------- */
+
+@media (max-width:1399px){
+
+  .card{
+    width:30%;
+  }
+
+}
+
+/* ----------- Tablets (768px - 1023px) ----------- */
+
+@media (max-width:1023px){
+
+  .sidebar{
+    width:200px;
+  }
+
+  .main-content{
+    margin-left:200px;
+    padding:20px;
+  }
+
+  .card{
+    width:45%;
+  }
+
+  .dashboard-summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+/* ----------- Small Tablets / Large Phones ----------- */
+
+@media (max-width:768px){
+
+  body{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+    border-right:none;
+    border-bottom:1px solid #e5e7eb;
+  }
+
+  .sidebar-nav{
+    display:flex;
+    overflow-x:auto;
+  }
+
+  .sidebar-nav li{
+    white-space:nowrap;
+  }
+
+  .main-content{
+    margin-left:0;
+    padding:20px;
+  }
+
+  .top-header{
+    justify-content:space-between;
+  }
+
+  .dashboard-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .card{
+    width:100%;
+  }
+
+}
+
+/* ----------- Mobile Devices ----------- */
+
+@media (max-width:480px){
+
+  .main-content{
+    padding:15px;
+  }
+
+  .section-title{
+    font-size:18px;
+  }
+
+  .dashboard-summary{
+    grid-template-columns:1fr;
+  }
+
+  .card img{
+    height:140px;
+  }
+
+  .card-actions{
+    display:flex;
+    gap:5px;
+  }
+
+  .card-actions .edit-btn,
+  .card-actions .delete-btn{
+    width:100%;
+  }
+
+  .modal-content{
+    width:90%;
+  }
+
+}

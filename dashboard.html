@@ -1,136 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="CSS/dashboard.css" />
-</head>
-<body>
-
-  <!-- =========================
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="CSS/dashboard.css" />
+  </head>
+  <body>
+    
+    <!-- =========================
        SIDEBAR
   ========================== -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h2>Shiv Shakti Admin</h2>
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>Shiv Shakti Admin</h2>
+      </div>
+      <ul class="sidebar-nav">
+        <li class="active" data-section="dashboard">Dashboard</li>
+        <li data-section="specialization">Specialization</li>
+        <li data-section="gallery">Gallery</li>
+        <li data-section="bookings">Bookings</li>
+        <li data-section="enquiries">Enquiries</li>
+      </ul>
     </div>
-    <ul class="sidebar-nav">
-      <li class="active" data-section="dashboard">Dashboard</li>
-      <li data-section="specialization">Specialization</li>
-      <li data-section="gallery">Gallery</li>
-      <li data-section="bookings">Bookings</li>
-      <li data-section="enquiries">Enquiries</li>
-    </ul>
-  </div>
 
-  <!-- =========================
+    <!-- =========================
        MAIN CONTENT
   ========================== -->
-  <div class="main-content">
-
-    <!-- Top Header -->
-    <div class="top-header">
-      <div class="user-info">
-        <span>Admin</span>
-        <button class="logout-btn">Logout</button>
+    <div class="main-content">
+      <!-- Top Header -->
+      <div class="top-header">
+        <div class="user-info">
+          <span>Admin</span>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
       </div>
-    </div>
 
-    <!-- =========================
+      <!-- =========================
          DASHBOARD SUMMARY
     ========================== -->
-    <div class="section" id="dashboard">
-      <h2 class="section-title">Welcome to Admin Dashboard</h2>
-      <!-- <p>Use the sidebar to navigate between sections.</p> -->
+      <div class="section" id="dashboard">
+        <h2 class="section-title">Welcome to Admin Dashboard</h2>
+        <!-- <p>Use the sidebar to navigate between sections.</p> -->
 
-      <div class="dashboard-summary">
-        <div class="summary-card" id="total-enquiries">
-          <h3>Enquiries</h3>
-          <p>0</p>
-        </div>
-        <div class="summary-card" id="total-bookings">
-          <h3>Bookings</h3>
-          <p>0</p>
-        </div>
-        <div class="summary-card" id="total-specialization">
-          <h3>Specialization</h3>
-          <p>0</p>
-        </div>
-        <div class="summary-card" id="total-gallery">
-          <h3>Gallery</h3>
-          <p>0</p>
+        <div class="dashboard-summary">
+          <div class="summary-card" id="total-enquiries">
+            <h3>Enquiries</h3>
+            <p>0</p>
+          </div>
+          <div class="summary-card" id="total-bookings">
+            <h3>Bookings</h3>
+            <p>0</p>
+          </div>
+          <div class="summary-card" id="total-specialization">
+            <h3>Specialization</h3>
+            <p>0</p>
+          </div>
+          <div class="summary-card" id="total-gallery">
+            <h3>Gallery</h3>
+            <p>0</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- =========================
+      <!-- =========================
          SPECIALIZATION SECTION
     ========================== -->
-    <div class="section" id="specialization" style="display: none;">
-      <h2 class="section-title">Specialization Cards</h2>
-      <button class="add-card-btn">+ Add New Card</button>
-      <div class="cards-section" id="specialization-cards">
-        <!-- Specialization cards dynamically added here -->
+      <div class="section" id="specialization" style="display: none">
+        <h2 class="section-title">Specialization Cards</h2>
+        <button class="add-card-btn">+ Add New Card</button>
+        <div class="cards-section" id="specialization-cards">
+          <!-- Specialization cards dynamically added here -->
+        </div>
       </div>
-    </div>
 
-    <!-- =========================
+      <!-- =========================
          GALLERY SECTION
     ========================== -->
-    <div class="section" id="gallery" style="display: none;">
-      <h2 class="section-title">Gallery Cards</h2>
-      <button class="add-card-btn">+ Add New Card</button>
-      <div class="cards-section" id="gallery-cards">
-        <!-- Gallery cards dynamically added here -->
+      <div class="section" id="gallery" style="display: none">
+        <h2 class="section-title">Gallery Cards</h2>
+        <button class="add-card-btn">+ Add New Card</button>
+        <div class="cards-section" id="gallery-cards">
+          <!-- Gallery cards dynamically added here -->
+        </div>
       </div>
-    </div>
 
-    <!-- =========================
+      <!-- =========================
          BOOKINGS SECTION
     ========================== -->
-    <div class="section" id="bookings" style="display: none;">
-      <h2 class="section-title">Bookings</h2>
-      <div id="bookings-cards" class="cards-container">
-        <!-- Booking cards dynamically added here -->
+      <div class="section" id="bookings" style="display: none">
+        <h2 class="section-title">Bookings</h2>
+        <div id="bookings-cards" class="cards-container">
+          <!-- Booking cards dynamically added here -->
+        </div>
+      </div>
+
+      <!-- =========================
+         ENQUIRIES SECTION
+    ========================== -->
+      <div class="section" id="enquiries" style="display: none">
+        <h2 class="section-title">Enquiries</h2>
+        <div id="enquiries-cards" class="cards-container">
+          <!-- Enquiry cards dynamically added here -->
+        </div>
       </div>
     </div>
 
     <!-- =========================
-         ENQUIRIES SECTION
-    ========================== -->
-    <div class="section" id="enquiries" style="display: none;">
-      <h2 class="section-title">Enquiries</h2>
-      <div id="enquiries-cards" class="cards-container">
-        <!-- Enquiry cards dynamically added here -->
+       MODAL FOR ADD/EDIT CARDS
+  ========================== -->
+    <div id="card-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 id="modal-title">Add New Card</h2>
+
+        <form id="card-form">
+          <label for="card-image">Select Image</label>
+          <input type="file" id="card-image" accept="image/*" required />
+
+          <label for="card-title">Title</label>
+          <input
+            type="text"
+            id="card-title"
+            placeholder="Enter title"
+            required
+          />
+
+          <label for="card-desc">Description</label>
+          <textarea
+            id="card-desc"
+            placeholder="Enter description"
+            required
+          ></textarea>
+
+          <button type="submit" id="modal-submit-btn">Add Card</button>
+        </form>
       </div>
     </div>
 
-  </div>
-
-  <!-- =========================
-       MODAL FOR ADD/EDIT CARDS
-  ========================== -->
-  <div id="card-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn">&times;</span>
-      <h2 id="modal-title">Add New Card</h2>
-
-      <form id="card-form">
-        <label for="card-image">Select Image</label>
-        <input type="file" id="card-image" accept="image/*" required />
-
-        <label for="card-title">Title</label>
-        <input type="text" id="card-title" placeholder="Enter title" required />
-
-        <label for="card-desc">Description</label>
-        <textarea id="card-desc" placeholder="Enter description" required></textarea>
-
-        <button type="submit" id="modal-submit-btn">Add Card</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="JS/dashboard.js"></script>
-</body>
+    <script src="JS/dashboard.js"></script>
+  </body>
 </html>

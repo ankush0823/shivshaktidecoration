@@ -114,10 +114,11 @@ cardForm.addEventListener("submit", (e) => {
 
 // --- Update Summary Counts ---
 function updateSummaryCounts() {
-  document.getElementById(
-    "total-specialization"
-  ).querySelector("p").textContent =
-    document.getElementById("specialization-cards").children.length;
+  document
+    .getElementById("total-specialization")
+    .querySelector("p").textContent = document.getElementById(
+    "specialization-cards",
+  ).children.length;
 
   document.getElementById("total-gallery").querySelector("p").textContent =
     document.getElementById("gallery-cards").children.length;
@@ -193,4 +194,13 @@ function addEnquiry(data) {
     }
   });
 }
- 
+
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+
+function logout() {
+  localStorage.removeItem("adminLoggedIn");
+
+  window.location.href = "login.html";
+}
