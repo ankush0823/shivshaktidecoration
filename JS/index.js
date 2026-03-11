@@ -1,8 +1,30 @@
-// ============================
-// FRONT_END/JS/index.js
-// ============================
-
+ 
 document.addEventListener("DOMContentLoaded", () => {
+ 
+  // HAMBURGER MENU TOGGLE 
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navLinks = document.querySelector(".nav-links");
+
+  menuToggle.addEventListener("click", () => {
+    menuToggle.classList.toggle("active");
+    navLinks.classList.toggle("active");
+  });
+
+  // Close menu when a nav link is clicked
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      menuToggle.classList.remove("active");
+      navLinks.classList.remove("active");
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+      menuToggle.classList.remove("active");
+      navLinks.classList.remove("active");
+    }
+  }); 
   const Form = document.getElementById("enquiryForm");
 
   Form.addEventListener("submit", async (e) => {

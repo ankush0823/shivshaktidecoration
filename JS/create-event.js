@@ -1,6 +1,4 @@
-// ============================
-// FRONT_END/JS/create-event.js
-// ============================
+ 
 
 document.addEventListener("DOMContentLoaded", () => {
   const bookingForm = document.getElementById("bookingForm");

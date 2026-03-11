@@ -218,6 +218,7 @@ body {
 
     display: none;
   }
+  
 
   .menu-toggle {
     display: block;
@@ -242,4 +243,18 @@ body {
 
 .menu-toggle.active span:nth-child(3) {
   transform: rotate(-45deg) translate(6px, -6px);
+}
+
+@media (max-width: 360px) {
+  .book-btn{
+    padding: 5px 13px;
+    border: none;
+    border-radius: 43px;
+    background: #ff4d6d;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+  }
 }

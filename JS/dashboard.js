@@ -1,10 +1,18 @@
-// ============================
-// FRONT_END/JS/dashboard.js
-// ============================
-
-if (localStorage.getItem("adminLoggedIn") !== "true") {
-  window.location.href = "login.html";
+ 
+async function checkAuth() {
+  try {
+    const res = await fetch("/admin/check", {
+      credentials: "include" // sends the httpOnly cookie
+    });
+    if (!res.ok) {
+      window.location.href = "login.html";
+    }
+  } catch (err) {
+    window.location.href = "login.html";
+  }
 }
+
+checkAuth();
 
 // --- Sidebar Navigation ---
 const sidebarItems = document.querySelectorAll(".sidebar-nav li");
@@ -31,7 +39,7 @@ let currentSection = "";
 // Open modal
 document.querySelectorAll(".add-card-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    currentSection = btn.closest(".section").id; // "specialization" ya "gallery"
+    currentSection = btn.closest(".section").id;
     modalTitle.textContent = "Add New Card";
     modalSubmitBtn.textContent = "Add Card";
     cardForm.reset();
@@ -41,7 +49,6 @@ document.querySelectorAll(".add-card-btn").forEach(btn => {
     const titleInput = document.getElementById("card-title");
     const descInput = document.getElementById("card-desc");
 
-    // Specialization mein title/desc dikhao, gallery mein nahi
     const showTitleDesc = currentSection === "specialization";
     titleLabel.style.display = showTitleDesc ? "block" : "none";
     descLabel.style.display = showTitleDesc ? "block" : "none";
@@ -60,13 +67,12 @@ window.addEventListener("click", e => {
 });
 
 // --- Load Cards ---
-// FIX: "gallery" section ka data server pe "/api/work" endpoint se aata hai
 async function loadCards(section) {
   const endpoint = section === "specialization" ? "/api/specialization" : "/api/work";
   const containerId = section === "specialization" ? "specialization-cards" : "gallery-cards";
 
   try {
-    const res = await fetch(endpoint);
+    const res = await fetch(endpoint, { credentials: "include" });
     if (!res.ok) { console.error("Failed to load:", endpoint); return; }
 
     const data = await res.json();
@@ -92,7 +98,7 @@ async function loadCards(section) {
             ? `/api/specialization/${card._id}`
             : `/api/work/${card._id}`;
           try {
-            await fetch(deleteEndpoint, { method: "DELETE" });
+            await fetch(deleteEndpoint, { method: "DELETE", credentials: "include" });
             cardDiv.remove();
             updateSummaryCounts();
           } catch (err) {
@@ -131,14 +137,17 @@ cardForm.addEventListener("submit", async e => {
     formData.append("description", desc);
   }
 
-  // FIX: "gallery" section ka endpoint "/api/work" hai
   const endpoint = currentSection === "specialization" ? "/api/specialization" : "/api/work";
 
   modalSubmitBtn.disabled = true;
   modalSubmitBtn.textContent = "Saving...";
 
   try {
-    const res = await fetch(endpoint, { method: "POST", body: formData });
+    const res = await fetch(endpoint, {
+      method: "POST",
+      credentials: "include", // sends httpOnly cookie
+      body: formData
+    });
     const data = await res.json();
 
     if (!res.ok) { alert("Error: " + (data.error || "Failed to save")); return; }
@@ -146,8 +155,6 @@ cardForm.addEventListener("submit", async e => {
     alert("Card saved successfully!");
     modal.style.display = "none";
     cardForm.reset();
-
-    // FIX: "gallery" section ke liye "gallery" pass karo (jo internally /api/work hit karega)
     loadCards(currentSection);
   } catch (err) {
     alert("Error: " + err.message);
@@ -172,7 +179,7 @@ function updateSummaryCounts() {
 // --- Load Enquiries ---
 async function loadEnquiries() {
   try {
-    const res = await fetch("/enquiries");
+    const res = await fetch("/enquiries", { credentials: "include" });
     if (!res.ok) return;
     const data = await res.json();
     const container = document.getElementById("enquiries-cards");
@@ -194,7 +201,7 @@ async function loadEnquiries() {
       cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
         if (confirm("Delete this enquiry?")) {
           try {
-            await fetch(`/enquiries/${item._id}`, { method: "DELETE" });
+            await fetch(`/enquiries/${item._id}`, { method: "DELETE", credentials: "include" });
             cardDiv.remove();
             updateSummaryCounts();
           } catch (err) {
@@ -213,7 +220,7 @@ async function loadEnquiries() {
 // --- Load Bookings ---
 async function loadBookings() {
   try {
-    const res = await fetch("/bookings");
+    const res = await fetch("/bookings", { credentials: "include" });
     if (!res.ok) return;
     const data = await res.json();
     const container = document.getElementById("bookings-cards");
@@ -241,6 +248,7 @@ async function loadBookings() {
           await fetch(`/bookings/${item._id}/status`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ status: "Approved" })
           });
           cardDiv.querySelector(".status-text").innerHTML = "<strong>Status:</strong> Approved ✅";
@@ -253,7 +261,7 @@ async function loadBookings() {
       cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
         if (confirm("Delete this booking?")) {
           try {
-            await fetch(`/bookings/${item._id}`, { method: "DELETE" });
+            await fetch(`/bookings/${item._id}`, { method: "DELETE", credentials: "include" });
             cardDiv.remove();
             updateSummaryCounts();
           } catch (err) {
@@ -273,13 +281,20 @@ async function loadBookings() {
 // --- DOM Loaded ---
 document.addEventListener("DOMContentLoaded", () => {
   loadCards("specialization");
-  loadCards("gallery"); // gallery section = /api/work endpoint
+  loadCards("gallery");
   loadEnquiries();
   loadBookings();
 });
 
 // --- Logout ---
-function logout() {
-  localStorage.removeItem("adminLoggedIn");
+async function logout() {
+  try {
+    await fetch("/admin/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
   window.location.href = "login.html";
 }
