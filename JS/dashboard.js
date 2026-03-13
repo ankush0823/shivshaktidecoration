@@ -298,3 +298,106 @@ async function logout() {
   }
   window.location.href = "login.html";
 }
+
+
+// --- Change Password ---
+async function changePassword() {
+  const currentPassword = document.getElementById("current-password").value;
+  const newPassword = document.getElementById("new-password").value;
+  const confirmNewPassword = document.getElementById("confirm-new-password").value;
+  const btn = document.getElementById("change-pass-btn");
+  const msgEl = document.getElementById("change-pass-msg");
+
+  msgEl.style.cssText = "";
+  msgEl.textContent = "";
+
+  if (!currentPassword || !newPassword || !confirmNewPassword) {
+    msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+    msgEl.textContent = "❌ All fields are required.";
+    return;
+  }
+
+  if (newPassword.length < 6) {
+    msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+    msgEl.textContent = "❌ New password must be at least 6 characters.";
+    return;
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+    msgEl.textContent = "❌ Passwords do not match.";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Updating...";
+
+  try {
+    const res = await fetch("/admin/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      msgEl.style.cssText = "color:#2d7a47;margin-top:12px;font-size:14px;";
+      msgEl.textContent = "✅ " + result.message;
+      document.getElementById("current-password").value = "";
+      document.getElementById("new-password").value = "";
+      document.getElementById("confirm-new-password").value = "";
+    } else {
+      msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+      msgEl.textContent = "❌ " + result.message;
+    }
+  } catch (err) {
+    msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+    msgEl.textContent = "❌ Server error. Please try again.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Update Password";
+  }
+}
+
+
+// --- Delete Account ---
+async function deleteAccount() {
+  const confirmed = confirm("⚠️ Are you sure you want to delete your admin account? This cannot be undone!");
+  if (!confirmed) return;
+
+  const secondConfirm = confirm("🚨 Last warning! After deletion, anyone can register as admin. Proceed?");
+  if (!secondConfirm) return;
+
+  const btn = document.getElementById("delete-account-btn");
+  const msgEl = document.getElementById("delete-account-msg");
+
+  btn.disabled = true;
+  btn.textContent = "Deleting...";
+
+  try {
+    const res = await fetch("/admin/delete-account", {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      msgEl.style.cssText = "color:#2d7a47;margin-top:12px;font-size:14px;";
+      msgEl.textContent = "✅ Account deleted. Redirecting...";
+      setTimeout(() => { window.location.href = "register.html"; }, 2000);
+    } else {
+      msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+      msgEl.textContent = "❌ " + result.message;
+      btn.disabled = false;
+      btn.textContent = "Delete My Account";
+    }
+  } catch (err) {
+    msgEl.style.cssText = "color:#c0392b;margin-top:12px;font-size:14px;";
+    msgEl.textContent = "❌ Server error. Please try again.";
+    btn.disabled = false;
+    btn.textContent = "Delete My Account";
+  }
+}

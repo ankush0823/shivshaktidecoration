@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Register — Shiv Shakti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --gold: #c9922a;
+        --gold-light: #e8b84b;
+        --dark: #1a1410;
+        --card-bg: #fdf8f2;
+        --border: #e8ddd0;
+        --text: #3a2e22;
+        --muted: #8a7a6a;
+      }
+
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: var(--dark);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-image:
+          radial-gradient(ellipse at 20% 50%, rgba(201,146,42,0.08) 0%, transparent 60%),
+          radial-gradient(ellipse at 80% 20%, rgba(201,146,42,0.05) 0%, transparent 50%);
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 48px 44px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 32px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,146,42,0.15);
+        animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .brand {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .brand-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 26px;
+        box-shadow: 0 8px 24px rgba(201,146,42,0.3);
+      }
+
+      .brand h1 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.5px;
+      }
+
+      .brand p {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 4px 12px;
+        background: rgba(201,146,42,0.1);
+        border: 1px solid rgba(201,146,42,0.3);
+        border-radius: 20px;
+        font-size: 11px;
+        color: var(--gold);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+
+      .divider {
+        width: 40px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        margin: 0 auto 28px;
+        border-radius: 2px;
+      }
+
+      .field { margin-bottom: 18px; }
+
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+
+      .input-wrap { position: relative; }
+
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        color: var(--text);
+        background: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+      }
+
+      input[type="password"] { padding-right: 44px; }
+
+      input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201,146,42,0.12);
+      }
+
+      .toggle-eye {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 17px;
+        color: var(--muted);
+        padding: 0;
+        line-height: 1;
+      }
+
+      .toggle-eye:hover { color: var(--gold); }
+
+      .strength-bar {
+        height: 3px;
+        border-radius: 4px;
+        background: #e8ddd0;
+        margin-top: 7px;
+        overflow: hidden;
+      }
+
+      .strength-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s, background 0.3s;
+        width: 0%;
+      }
+
+      .strength-text {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.15s;
+        letter-spacing: 0.3px;
+        margin-top: 8px;
+        box-shadow: 0 4px 16px rgba(201,146,42,0.25);
+      }
+
+      .submit-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+      .submit-btn:active:not(:disabled) { transform: translateY(0); }
+      .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+      .message {
+        margin-top: 18px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        display: none;
+        line-height: 1.5;
+      }
+
+      .message.success {
+        background: #f0faf3;
+        color: #2d7a47;
+        border: 1px solid #b6e2c6;
+        display: block;
+      }
+
+      .message.error {
+        background: #fff5f5;
+        color: #c0392b;
+        border: 1px solid #f5c6c6;
+        display: block;
+      }
+
+      /* Locked state */
+      .locked-box {
+        text-align: center;
+        padding: 10px 0 20px;
+        display: none;
+      }
+
+      .locked-box .lock-icon { font-size: 52px; margin-bottom: 16px; }
+
+      .locked-box h2 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        color: var(--text);
+        margin-bottom: 10px;
+      }
+
+      .locked-box p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .login-link {
+        display: block;
+        text-align: center;
+        margin-top: 22px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+      }
+
+      .login-link:hover { color: var(--gold); }
+
+      #form-area { display: none; }
+      #checking { text-align: center; padding: 20px 0; color: var(--muted); font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="brand">
+        <div class="brand-icon">👑</div>
+        <h1>Admin Registration</h1>
+        <p>Create the admin account for<br/>Shiv Shakti Decoration</p>
+        <span class="badge">⚡ First-time setup only</span>
+      </div>
+      <div class="divider"></div>
+
+      <!-- While checking if admin already exists -->
+      <div id="checking">⏳ Checking registration status...</div>
+
+      <!-- Registration locked — admin already exists -->
+      <div class="locked-box" id="locked-box">
+        <div class="lock-icon">🔒</div>
+        <h2>Registration Locked</h2>
+        <p>An admin account already exists.<br/>Registration is disabled for security.<br/><br/>Please login with your credentials.</p>
+      </div>
+
+      <!-- Registration form — shown only if no admin exists -->
+      <div id="form-area">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="e.g. admin" autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="used for password reset" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" placeholder="Min. 6 characters" oninput="checkStrength()" />
+            <button class="toggle-eye" onclick="togglePass('password', this)" type="button">👁️</button>
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <div class="strength-text" id="strength-text"></div>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-wrap">
+            <input type="password" id="confirmPassword" placeholder="Re-enter password" />
+            <button class="toggle-eye" onclick="togglePass('confirmPassword', this)" type="button">👁️</button>
+          </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="register()">Create Admin Account</button>
+        <div id="message" class="message"></div>
+      </div>
+
+      <a href="login.html" class="login-link">← Already have an account? Login</a>
+    </div>
+
+    <script>
+      // On page load — check if admin already exists
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await fetch("/admin/exists");
+          const data = await res.json();
+
+          document.getElementById("checking").style.display = "none";
+
+          if (data.exists) {
+            // Admin already registered — lock the page
+            document.getElementById("locked-box").style.display = "block";
+          } else {
+            // No admin yet — show registration form
+            document.getElementById("form-area").style.display = "block";
+          }
+        } catch (err) {
+          document.getElementById("checking").textContent = "❌ Cannot connect to server.";
+        }
+      });
+
+      function togglePass(id, btn) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+        btn.textContent = input.type === "password" ? "👁️" : "🙈";
+      }
+
+      function checkStrength() {
+        const val = document.getElementById("password").value;
+        const fill = document.getElementById("strength-fill");
+        const text = document.getElementById("strength-text");
+
+        let score = 0;
+        if (val.length >= 6)  score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+
+        const levels = [
+          { pct: "0%",   color: "",        label: "" },
+          { pct: "25%",  color: "#e74c3c", label: "Weak" },
+          { pct: "50%",  color: "#e67e22", label: "Fair" },
+          { pct: "75%",  color: "#f1c40f", label: "Good" },
+          { pct: "90%",  color: "#2ecc71", label: "Strong" },
+          { pct: "100%", color: "#27ae60", label: "Very Strong ✅" },
+        ];
+
+        const level = levels[Math.min(score, 5)];
+        fill.style.width = level.pct;
+        fill.style.background = level.color;
+        text.textContent = level.label;
+      }
+
+      async function register() {
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const btn = document.getElementById("submitBtn");
+        const msgEl = document.getElementById("message");
+
+        // Reset message
+        msgEl.className = "message";
+        msgEl.textContent = "";
+
+        // Validate
+        if (!username || !email || !password || !confirmPassword) {
+          msgEl.className = "message error";
+          msgEl.textContent = "❌ All fields are required.";
+          return;
+        }
+
+        if (password.length < 6) {
+          msgEl.className = "message error";
+          msgEl.textContent = "❌ Password must be at least 6 characters.";
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          msgEl.className = "message error";
+          msgEl.textContent = "❌ Passwords do not match.";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Creating Account...";
+
+        try {
+          const res = await fetch("/admin/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          });
+
+          const result = await res.json();
+
+          if (result.success) {
+            msgEl.className = "message success";
+            msgEl.textContent = "✅ Admin account created! Redirecting to login...";
+            btn.textContent = "Done!";
+            setTimeout(() => { window.location.href = "login.html"; }, 2000);
+          } else {
+            msgEl.className = "message error";
+            msgEl.textContent = "❌ " + (result.message || "Registration failed.");
+            btn.disabled = false;
+            btn.textContent = "Create Admin Account";
+          }
+        } catch (err) {
+          msgEl.className = "message error";
+          msgEl.textContent = "❌ Server error. Make sure server is running.";
+          btn.disabled = false;
+          btn.textContent = "Create Admin Account";
+        }
+      }
+
+      // Enter key support
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") register();
+      });
+    </script>
+  </body>
+</html>
