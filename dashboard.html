@@ -21,6 +21,7 @@
       <li data-section="gallery">Gallery</li>
       <li data-section="bookings">Bookings</li>
       <li data-section="enquiries">Enquiries</li>
+      <li data-section="reviews">Reviews</li>
       <li data-section="change-password">Change Password</li>
     </ul>
   </div>
@@ -55,6 +56,10 @@
         </div>
         <div class="summary-card" id="total-gallery">
           <h3>Gallery</h3>
+          <p>0</p>
+        </div>
+        <div class="summary-card" id="total-reviews">
+          <h3>Reviews</h3>
           <p>0</p>
         </div>
       </div>
@@ -93,6 +98,13 @@
         <!-- Enquiry cards dynamically added here -->
       </div>
     </div>
+    
+    <div class="section" id="reviews" style="display: none">
+      <h2 class="section-title">Reviews</h2>
+      <div id="reviews-cards" class="cards-container">
+        <!-- Review cards dynamically added here -->
+      </div>
+    </div>
 
     <!-- ========================= CHANGE PASSWORD SECTION ======================== -->
     <div class="section" id="change-password" style="display: none">
@@ -115,8 +127,10 @@
 
         <hr style="margin: 32px 0; border: none; border-top: 1px solid #e8ddd0;" />
 
-        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #c0392b; margin-bottom: 8px;">Danger Zone</h3>
-        <p style="font-size: 13px; color: #8a7a6a; margin-bottom: 16px;">Deleting your account will permanently remove it. Registration will open again for the next admin.</p>
+        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #c0392b; margin-bottom: 8px;">
+          Danger Zone</h3>
+        <p style="font-size: 13px; color: #8a7a6a; margin-bottom: 16px;">Deleting your account will permanently remove
+          it. Registration will open again for the next admin.</p>
         <button id="delete-account-btn" onclick="deleteAccount()">Delete My Account</button>
         <div id="delete-account-msg"></div>
       </div>

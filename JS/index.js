@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadSpecializationCards();
   loadWorkCards();
+  loadReviews();
 });
 
 async function loadSpecializationCards() {
@@ -104,3 +105,102 @@ async function loadWorkCards() {
     console.error("Failed to load work cards:", err);
   }
 }
+
+ 
+// --- Load & Display Approved Reviews ---
+async function loadReviews() {
+  const container = document.getElementById("reviews-list");
+  if (!container) return;
+
+  try {
+    const res = await fetch("/reviews");
+    if (!res.ok) return;
+    const data = await res.json();
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="reviews-empty">
+          <span>💬</span>
+          No reviews yet. Be the first to share your experience!
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = "";
+    data.forEach(review => {
+      const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+      const initials = review.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+      const date = new Date(review.createdAt).toLocaleDateString("en-IN", {
+        day: "numeric", month: "short", year: "numeric"
+      });
+
+      const card = document.createElement("div");
+      card.classList.add("review-card");
+      card.innerHTML = `
+        <div class="review-card-header">
+          <div class="review-avatar">${initials}</div>
+          <div class="review-name-date">
+            <strong>${review.name}</strong>
+            <small>${date}</small>
+          </div>
+          <span class="review-stars">${stars}</span>
+        </div>
+        <p class="review-message">${review.message}</p>
+      `;
+      container.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Failed to load reviews:", err);
+    container.innerHTML = `<div class="reviews-empty"><span>⚠️</span>Could not load reviews.</div>`;
+  }
+}
+
+// --- Submit New Review ---
+async function submitReview() {
+  const name    = document.getElementById("review-name").value.trim();
+  const email   = document.getElementById("review-email").value.trim();
+  const message = document.getElementById("review-message").value.trim();
+  const ratingEl = document.querySelector('input[name="rating"]:checked');
+  const btn     = document.getElementById("review-submit-btn");
+  const successMsg = document.getElementById("review-success");
+
+  if (!name || !message) {
+    alert("Please enter your name and message.");
+    return;
+  }
+  if (!ratingEl) {
+    alert("Please select a star rating.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+
+  try {
+    const res = await fetch("/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, rating: parseInt(ratingEl.value), message })
+    });
+    const result = await res.json();
+
+    if (res.ok) {
+      successMsg.style.display = "block";
+      // Reset form
+      document.getElementById("review-name").value = "";
+      document.getElementById("review-email").value = "";
+      document.getElementById("review-message").value = "";
+      document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+
+      setTimeout(() => { successMsg.style.display = "none"; }, 5000);
+    } else {
+      alert(result.message || "Something went wrong.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error. Please try again.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit Review";
+  }
+} 

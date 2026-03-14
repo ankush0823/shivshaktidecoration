@@ -174,6 +174,8 @@ function updateSummaryCounts() {
     document.getElementById("bookings-cards").children.length;
   document.getElementById("total-enquiries").querySelector("p").textContent =
     document.getElementById("enquiries-cards").children.length;
+    document.getElementById("total-reviews").querySelector("p").textContent =
+  document.getElementById("reviews-cards").children.length;
 }
 
 // --- Load Enquiries ---
@@ -284,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCards("gallery");
   loadEnquiries();
   loadBookings();
+  loadReviews();
 });
 
 // --- Logout ---
@@ -401,3 +404,92 @@ async function deleteAccount() {
     btn.textContent = "Delete My Account";
   }
 }
+
+
+
+
+// --- Load Reviews (Admin) ---
+async function loadReviews() {
+  try {
+    const res = await fetch("/admin/reviews");
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = document.getElementById("reviews-cards");
+    container.innerHTML = "";
+ 
+    if (data.length === 0) {
+      container.innerHTML = `<p style="color:#aaa;padding:20px;">No reviews submitted yet.</p>`;
+      updateSummaryCounts();
+      return;
+    }
+ 
+    data.forEach(item => {
+      const stars = "★".repeat(item.rating) + "☆".repeat(5 - item.rating);
+      const date = new Date(item.createdAt).toLocaleDateString("en-IN", {
+        day: "numeric", month: "short", year: "numeric"
+      });
+ 
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("card");
+      cardDiv.style.borderLeft = item.approved ? "4px solid #22c55e" : "4px solid #f59e0b";
+ 
+      cardDiv.innerHTML = `
+        <h3>${item.name} <span style="color:#f5a623;font-size:0.9rem;">${stars}</span></h3>
+        <p><strong>Email:</strong> ${item.email || '—'}</p>
+        <p>${item.message}</p>
+        <p>
+          <small>${date}</small>
+          &nbsp;|&nbsp;
+          <span style="font-weight:600;color:${item.approved ? '#22c55e' : '#f59e0b'}">
+            ${item.approved ? '✅ Approved' : '⏳ Pending'}
+          </span>
+        </p>
+        <div class="card-actions">
+          <button class="approve-btn"
+            style="background:${item.approved ? '#ef4444' : '#22c55e'};color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:0.85rem;"
+            data-approved="${item.approved}">
+            ${item.approved ? 'Unapprove' : 'Approve'}
+          </button>
+          <button class="delete-btn">Delete</button>
+        </div>
+      `;
+ 
+      // Toggle Approve / Unapprove
+      cardDiv.querySelector(".approve-btn").addEventListener("click", async (e) => {
+        const currentlyApproved = e.target.dataset.approved === "true";
+        const newApproved = !currentlyApproved;
+        try {
+          await fetch(`/admin/reviews/${item._id}/approve`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ approved: newApproved })
+          });
+          // Reload to reflect updated status
+          loadReviews();
+        } catch (err) {
+          alert("Action failed: " + err.message);
+        }
+      });
+ 
+      // Delete
+      cardDiv.querySelector(".delete-btn").addEventListener("click", async () => {
+        if (confirm("Delete this review permanently?")) {
+          try {
+            await fetch(`/admin/reviews/${item._id}`, { method: "DELETE" });
+            cardDiv.remove();
+            updateSummaryCounts();
+          } catch (err) {
+            alert("Delete failed");
+          }
+        }
+      });
+ 
+      container.appendChild(cardDiv);
+    });
+ 
+    updateSummaryCounts();
+  } catch (err) {
+    console.error("Error loading reviews:", err);
+  }
+}
+ 
