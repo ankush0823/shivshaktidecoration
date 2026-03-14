@@ -1,113 +1,188 @@
  
+let lightboxImages = [];
+let lightboxIndex = 0; 
+// DOMContentLoaded 
 document.addEventListener("DOMContentLoaded", () => {
- 
-  // HAMBURGER MENU TOGGLE 
-  const menuToggle = document.querySelector(".menu-toggle");
-  const navLinks = document.querySelector(".nav-links");
 
-  menuToggle.addEventListener("click", () => {
-    menuToggle.classList.toggle("active");
-    navLinks.classList.toggle("active");
-  });
-
-  // Close menu when a nav link is clicked
-  navLinks.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      menuToggle.classList.remove("active");
-      navLinks.classList.remove("active");
-    });
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-      menuToggle.classList.remove("active");
-      navLinks.classList.remove("active");
-    }
-  }); 
+  // --- Enquiry Form ---
   const Form = document.getElementById("enquiryForm");
+  if (Form) {
+    Form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = Form.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
 
-  Form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+      const data = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        mobile: document.getElementById("mobile").value.trim(),
+        message: document.getElementById("message").value.trim()
+      };
 
-    const submitBtn = Form.querySelector("button[type='submit']");
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sending...";
+      try {
+        const res = await fetch("/enquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        alert(result.message);
+        Form.reset();
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong! Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Message";
+      }
+    });
+  }
 
-    const data = {
-      name: document.getElementById("name").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      mobile: document.getElementById("mobile").value.trim(),
-      message: document.getElementById("message").value.trim()
-    };
+  // Load data on page load
+  loadSpecializationCards();
+  loadReviews();
 
-    try {
-      const res = await fetch("/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-      alert(result.message);
-      Form.reset();
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong! Please try again.");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Send Message";
-    }
+  // Close modals on overlay click
+  document.getElementById("specModal").addEventListener("click", (e) => {
+    if (e.target === document.getElementById("specModal")) closeSpecModal();
   });
 
-  loadSpecializationCards();
-  loadWorkCards();
-  loadReviews();
-});
+  document.getElementById("lightbox").addEventListener("click", (e) => {
+    if (e.target === document.getElementById("lightbox")) closeLightbox();
+  });
 
+  // Keyboard navigation
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeLightbox();
+      closeSpecModal();
+    }
+    if (e.key === "ArrowRight") lightboxNav(1);
+    if (e.key === "ArrowLeft") lightboxNav(-1);
+  });
+});
+ 
+// Specialization Cards 
 async function loadSpecializationCards() {
   try {
     const res = await fetch("/api/specialization");
     if (!res.ok) return;
     const data = await res.json();
     const container = document.getElementById("specialization-container");
+    if (!container) return;
     container.innerHTML = "";
+
+    if (data.length === 0) {
+      container.innerHTML = `<p style="text-align:center;color:#aaa;padding:40px;">No specializations added yet.</p>`;
+      return;
+    }
 
     data.forEach(card => {
       const div = document.createElement("div");
       div.classList.add("special-card");
+      div.setAttribute("data-id", card._id);
+      div.setAttribute("data-title", card.title);
+      div.setAttribute("data-desc", card.description);
+
       div.innerHTML = `
         <img src="${card.imageUrl}" alt="${card.title}" />
         <h3>${card.title}</h3>
         <p>${card.description}</p>
       `;
+
+      div.addEventListener("click", () => openSpecModal(card._id, card.title, card.description));
       container.appendChild(div);
     });
   } catch (err) {
     console.error("Failed to load specialization cards:", err);
   }
 }
+ 
+// Specialization Gallery Modal 
+// Cache to avoid re-fetching same card
+const specCache = {};
 
-async function loadWorkCards() {
+async function openSpecModal(id, title, desc) {
+  document.getElementById("specModalTitle").textContent = title;
+  document.getElementById("specModalDesc").textContent = desc;
+  document.getElementById("specModal").classList.add("active");
+  document.body.style.overflow = "hidden";
+
+  if (specCache[id]) {
+    renderModalImages(specCache[id]);
+    return;
+  }
+
+  document.getElementById("specModalGrid").innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+      <div style="width:40px;height:40px;border:3px solid #f0e8d8;border-top-color:#d4a45a;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 14px;"></div>
+      <p style="color:#aaa;font-size:0.9rem;">Loading images...</p>
+    </div>`;
+
   try {
-    const res = await fetch("/api/work");
-    if (!res.ok) return;
-    const data = await res.json();
-    const container = document.getElementById("work-container");
-    container.innerHTML = "";
-
-    data.forEach(card => {
-      const div = document.createElement("div");
-      div.classList.add("work-card");
-      div.innerHTML = `<img src="${card.imageUrl}" alt="Our Work" />`;
-      container.appendChild(div);
-    });
+    const res = await fetch(`/api/specialization/${id}`);
+    if (!res.ok) throw new Error("Failed to load");
+    const card = await res.json();
+    specCache[id] = card;
+    renderModalImages(card);
   } catch (err) {
-    console.error("Failed to load work cards:", err);
+    document.getElementById("specModalGrid").innerHTML = `
+      <div class="spec-modal-empty" style="grid-column:1/-1;">
+        <span>⚠️</span>Could not load images. Please try again.
+      </div>`;
   }
 }
 
+function renderModalImages(card) {
+  const allImages = card.images && card.images.length > 0
+    ? card.images
+    : (card.imageUrl ? [card.imageUrl] : []);
+
+  const grid = document.getElementById("specModalGrid");
+  grid.innerHTML = "";
+
+  if (allImages.length === 0) {
+    grid.innerHTML = `
+      <div class="spec-modal-empty" style="grid-column:1/-1;">
+        <span>🖼️</span>No gallery images yet for this category.
+      </div>`;
+    return;
+  }
+
+  lightboxImages = allImages;
+
+  allImages.forEach((imgUrl, idx) => {
+    const wrap = document.createElement("div");
+    wrap.classList.add("spec-modal-img-wrap");
+    wrap.innerHTML = `<img src="${imgUrl}" alt="Gallery image ${idx + 1}" />`;
+    wrap.addEventListener("click", () => openLightbox(idx));
+    grid.appendChild(wrap);
+  });
+}
+function closeSpecModal() {
+  document.getElementById("specModal").classList.remove("active");
+  document.body.style.overflow = "";
+}
  
-// --- Load & Display Approved Reviews ---
+// Lightbox 
+function openLightbox(index) {
+  lightboxIndex = index;
+  document.getElementById("lightboxImg").src = lightboxImages[index];
+  document.getElementById("lightbox").classList.add("active");
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+function lightboxNav(dir) {
+  if (!document.getElementById("lightbox").classList.contains("active")) return;
+  lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  document.getElementById("lightboxImg").src = lightboxImages[lightboxIndex];
+}
+ 
+// Reviews 
 async function loadReviews() {
   const container = document.getElementById("reviews-list");
   if (!container) return;
@@ -155,23 +230,16 @@ async function loadReviews() {
   }
 }
 
-// --- Submit New Review ---
 async function submitReview() {
-  const name    = document.getElementById("review-name").value.trim();
-  const email   = document.getElementById("review-email").value.trim();
+  const name = document.getElementById("review-name").value.trim();
+  const email = document.getElementById("review-email").value.trim();
   const message = document.getElementById("review-message").value.trim();
   const ratingEl = document.querySelector('input[name="rating"]:checked');
-  const btn     = document.getElementById("review-submit-btn");
+  const btn = document.getElementById("review-submit-btn");
   const successMsg = document.getElementById("review-success");
 
-  if (!name || !message) {
-    alert("Please enter your name and message.");
-    return;
-  }
-  if (!ratingEl) {
-    alert("Please select a star rating.");
-    return;
-  }
+  if (!name || !message) { alert("Please enter your name and message."); return; }
+  if (!ratingEl) { alert("Please select a star rating."); return; }
 
   btn.disabled = true;
   btn.textContent = "Submitting...";
@@ -186,12 +254,10 @@ async function submitReview() {
 
     if (res.ok) {
       successMsg.style.display = "block";
-      // Reset form
       document.getElementById("review-name").value = "";
       document.getElementById("review-email").value = "";
       document.getElementById("review-message").value = "";
       document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
-
       setTimeout(() => { successMsg.style.display = "none"; }, 5000);
     } else {
       alert(result.message || "Something went wrong.");
@@ -203,4 +269,4 @@ async function submitReview() {
     btn.disabled = false;
     btn.textContent = "Submit Review";
   }
-} 
+}

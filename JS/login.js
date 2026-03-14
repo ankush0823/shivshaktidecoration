@@ -1,5 +1,3 @@
- 
-
 async function login() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
@@ -17,14 +15,13 @@ async function login() {
     const res = await fetch("/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // Important: sends/receives cookies
       body: JSON.stringify({ username, password })
     });
 
     const result = await res.json();
 
     if (result.success) {
-      // No localStorage needed — JWT is in httpOnly cookie now
+      localStorage.setItem("adminLoggedIn", "true");
       window.location.href = "dashboard.html";
     } else {
       alert(result.message || "Wrong username or password");

@@ -6,17 +6,251 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shiv Shakti Decoration</title>
 
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+
   <!-- CSS Files -->
   <link rel="stylesheet" href="CSS/navbar.css" />
   <link rel="stylesheet" href="CSS/hero.css" />
   <link rel="stylesheet" href="CSS/specilization.css" />
-  <link rel="stylesheet" href="CSS/ourwork.css" />
   <link rel="stylesheet" href="CSS/contact.css" />
   <link rel="stylesheet" href="CSS/reviews.css" />
 
   <style>
     html {
       scroll-behavior: smooth;
+    }
+
+    .spec-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .spec-modal-overlay.active {
+      display: flex;
+    }
+
+    .spec-modal {
+      background: #fff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.88) translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .spec-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      border-bottom: 1px solid #f0e8d8;
+      background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+      color: #fff;
+    }
+
+    .spec-modal-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+    }
+
+    .spec-modal-header p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: #d4a45a;
+    }
+
+    .spec-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .spec-modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .spec-modal-body {
+      overflow-y: auto;
+      padding: 28px;
+      flex: 1;
+    }
+
+    .spec-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .spec-modal-img-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: #f5f0ea;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .spec-modal-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+      display: block;
+    }
+
+    .spec-modal-img-wrap:hover img {
+      transform: scale(1.06);
+    }
+
+    .spec-modal-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #aaa;
+    }
+
+    .spec-modal-empty span {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox-overlay.active {
+      display: flex;
+    }
+
+    .lightbox-overlay img {
+      max-width: 92vw;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.8;
+    }
+
+    .lightbox-close:hover {
+      opacity: 1;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      font-size: 1.8rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .lightbox-prev {
+      left: 20px;
+    }
+
+    .lightbox-next {
+      right: 20px;
+    }
+
+    .special-card {
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .special-card::after {
+      content: '📷 View Gallery';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+      color: #fff;
+      text-align: center;
+      padding: 30px 12px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .special-card:hover::after {
+      opacity: 1;
     }
   </style>
 </head>
@@ -28,9 +262,8 @@
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#specilization">Specialization</a></li>
-      <li><a href="#ourwork">Our Work</a></li>
-      <li><a href="#contact-us">Contact</a></li>
       <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#contact-us">Contact</a></li>
     </ul>
     <button class="book-btn desktop-book">
       <a href="create-event.html">Book Now</a>
@@ -55,22 +288,61 @@
   <section class="specialization" id="specilization">
     <div class="container">
       <h2 class="section-title">Our Specialization</h2>
-      <p class="section-subtitle">We create beautiful decorations for every special occasion</p>
-
+      <p class="section-subtitle">Click on any category to explore our work</p>
       <div class="cards-container" id="specialization-container">
-        <!-- Backend loaded specialization cards will appear here -->
+        <!-- Cards loaded from backend -->
       </div>
     </div>
   </section>
 
-  <!-- OUR WORK SECTION -->
-  <section class="our-work" id="ourwork">
+  <!-- REVIEWS SECTION -->
+  <section class="reviews" id="reviews">
     <div class="container">
-      <h2 class="section-title">Our Work</h2>
-      <p class="section-subtitle">Take a look at some of our beautiful event decorations</p>
+      <h2 class="section-title">Customer Reviews</h2>
+      <p class="section-subtitle">What our happy clients say about us</p>
 
-      <div class="work-container" id="work-container">
-        <!-- Backend loaded work cards will appear here -->
+      <div class="reviews-layout">
+        <div class="reviews-left">
+          <h3>What People Are Saying</h3>
+          <div class="reviews-scroll" id="reviews-list">
+            <div class="reviews-empty">
+              <span>💬</span>
+              Loading reviews...
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-divider"></div>
+
+        <div class="reviews-right">
+          <h3>Share Your Experience</h3>
+          <div class="review-form">
+            <div class="star-picker">
+              <label>Your Rating</label>
+              <div class="star-picker-stars">
+                <input type="radio" id="star5" name="rating" value="5" />
+                <label for="star5" title="5 stars">★</label>
+                <input type="radio" id="star4" name="rating" value="4" />
+                <label for="star4" title="4 stars">★</label>
+                <input type="radio" id="star3" name="rating" value="3" />
+                <label for="star3" title="3 stars">★</label>
+                <input type="radio" id="star2" name="rating" value="2" />
+                <label for="star2" title="2 stars">★</label>
+                <input type="radio" id="star1" name="rating" value="1" />
+                <label for="star1" title="1 star">★</label>
+              </div>
+            </div>
+            <input type="text" id="review-name" placeholder="Your Name *" required />
+            <input type="email" id="review-email" placeholder="Email (optional)" />
+            <textarea id="review-message" placeholder="Tell us about your experience *" required></textarea>
+            <button class="review-submit-btn" id="review-submit-btn" onclick="submitReview()">
+              Submit Review
+            </button>
+            <div class="review-success-msg" id="review-success">
+              ✅ Thank you! Your review has been submitted and will appear after approval.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -80,13 +352,11 @@
     <div class="container">
       <h2 class="section-title">Contact Us</h2>
       <p class="section-subtitle">Get in touch with us to make your event beautiful.</p>
-
       <div class="contact-container">
-        <!-- contact form -->
         <div class="contact-form">
           <form id="enquiryForm">
             <input type="text" id="name" placeholder="Your Name" required />
-            <input type="email" id="email" placeholder="Your Email (Optional)"  />
+            <input type="email" id="email" placeholder="Your Email (Optional)" />
             <input type="tel" id="mobile" placeholder="Mobile Number" required />
             <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
             <button type="submit" class="btn">Send Message</button>
@@ -94,73 +364,6 @@
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- REVIEWS SECTION -->
-  <section class="reviews" id="reviews">
-   
-
-    <!-- REVIEWS SECTION -->
-    <section class="reviews" id="reviews">
-      <div class="container">
-        <h2 class="section-title">Customer Reviews</h2>
-        <p class="section-subtitle">What our happy clients say about us</p>
-
-        <div class="reviews-layout">
-
-          <!-- LEFT: Existing approved reviews -->
-          <div class="reviews-left">
-            <h3>What People Are Saying</h3>
-            <div class="reviews-scroll" id="reviews-list">
-              <div class="reviews-empty">
-                <span>💬</span>
-                Loading reviews...
-              </div>
-            </div>
-          </div>
-
-          <!-- Divider -->
-          <div class="reviews-divider"></div>
-
-          <!-- RIGHT: Submit new review -->
-          <div class="reviews-right">
-            <h3>Share Your Experience</h3>
-            <div class="review-form">
-
-              <!-- Star Rating Picker -->
-              <div class="star-picker">
-                <label>Your Rating</label>
-                <div class="star-picker-stars">
-                  <input type="radio" id="star5" name="rating" value="5" />
-                  <label for="star5" title="5 stars">★</label>
-                  <input type="radio" id="star4" name="rating" value="4" />
-                  <label for="star4" title="4 stars">★</label>
-                  <input type="radio" id="star3" name="rating" value="3" />
-                  <label for="star3" title="3 stars">★</label>
-                  <input type="radio" id="star2" name="rating" value="2" />
-                  <label for="star2" title="2 stars">★</label>
-                  <input type="radio" id="star1" name="rating" value="1" />
-                  <label for="star1" title="1 star">★</label>
-                </div>
-              </div>
-
-              <input type="text" id="review-name" placeholder="Your Name *" required />
-              <input type="email" id="review-email" placeholder="Email (optional)" />
-              <textarea id="review-message" placeholder="Tell us about your experience *" required></textarea>
-
-              <button class="review-submit-btn" id="review-submit-btn" onclick="submitReview()">
-                Submit Review
-              </button>
-
-              <div class="review-success-msg" id="review-success">
-                ✅ Thank you! Your review has been submitted and will appear after approval.
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
   </section>
 
   <!-- FOOTER -->
@@ -175,7 +378,7 @@
         <ul>
           <li><a href="#home">Home</a></li>
           <li><a href="#specilization">Services</a></li>
-          <li><a href="#ourwork">Our Work</a></li>
+          <li><a href="#reviews">Reviews</a></li>
           <li><a href="#contact-us">Contact</a></li>
         </ul>
       </div>
@@ -183,13 +386,39 @@
         <h3>Contact</h3>
         <p>📞 +91-9876543210</p>
         <p>contact@shivshaktidecoration.com</p>
-        <p>📍Gurugram, Haryana</p>
+        <p>📍 Gurugram, Haryana</p>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2025 Shiv Shakti Decoration. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- SPECIALIZATION GALLERY MODAL -->
+  <div class="spec-modal-overlay" id="specModal">
+    <div class="spec-modal">
+      <div class="spec-modal-header">
+        <div>
+          <h2 id="specModalTitle">Specialization</h2>
+          <p id="specModalDesc"></p>
+        </div>
+        <button class="spec-modal-close" onclick="closeSpecModal()">✕</button>
+      </div>
+      <div class="spec-modal-body">
+        <div class="spec-modal-grid" id="specModalGrid">
+          <!-- images load here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+    <img src="" alt="" id="lightboxImg" />
+    <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">›</button>
+  </div>
 
   <script src="JS/index.js"></script>
 </body>
