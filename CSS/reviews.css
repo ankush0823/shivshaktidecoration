@@ -73,6 +73,8 @@
   font-size: 1rem;
 }
  
+
+/* scrolling */
 .reviews-scroll {
   display: flex;
   flex-direction: column;
